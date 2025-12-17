@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/odoo/odoo
 
-APP="OdoO"
+APP="Odoo"
 var_tags="${var_tags:-erp}"
 var_disk="${var_disk:-15}"
 var_cpu="${var_cpu:-4}"
@@ -34,13 +34,19 @@ function update_script() {
     $STD dpkg -i /opt/python3-lxml-html-clean.deb
     rm -f /opt/python3-lxml-html-clean.deb
   fi
+RELEASE="18.0"
 
-  RELEASE="18.0"
-  LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
-    grep -oP "odoo_${RELEASE}\.\d+_all\.deb" |
-    sed -E "s/odoo_(${RELEASE}\.[0-9]+)_all\.deb/\1/" |
-    sort -V |
-    tail -n1)
+LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
+  grep -oP "odoo_${RELEASE}\.\d+_all\.deb" |
+  sed -E "s/odoo_(${RELEASE}\.[0-9]+)_all\.deb/\1/" |
+  sort -V |
+  tail -n1)
+
+msg_info "Setup Odoo ${LATEST_VERSION}"
+curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${LATEST_VERSION}_all.deb" -o /opt/odoo.deb
+$STD apt install -y /opt/odoo.deb
+msg_ok "Setup Odoo ${LATEST_VERSION}"
+
 
   if [[ "${LATEST_VERSION}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP} service"
