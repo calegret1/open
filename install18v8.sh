@@ -47,14 +47,13 @@ curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${LATEST_VERSIO
 $STD apt install -y /opt/odoo.deb
 msg_ok "Setup Odoo ${LATEST_VERSION}"
 
-
-  if [[ "${LATEST_VERSION}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+if [[ "${LATEST_VERSION}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP} service"
     systemctl stop odoo
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to ${LATEST_VERSION}"
-    curl -fsSL https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${RELEASE}.latest_all.deb -o /opt/odoo.deb
+    curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${LATEST_VERSION}_all.deb" -o /opt/odoo.deb
     $STD apt install -y /opt/odoo.deb
     rm -f /opt/odoo.deb
     echo "$LATEST_VERSION" >/opt/${APP}_version.txt
@@ -64,6 +63,7 @@ msg_ok "Setup Odoo ${LATEST_VERSION}"
     systemctl start odoo
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
+
   else
     msg_ok "No update required. ${APP} is already at ${LATEST_VERSION}"
   fi
