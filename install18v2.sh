@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/odoo/odoo
 
-APP="Odoo"
+APP="Odoo Onligy"
 var_tags="${var_tags:-erp}"
 var_disk="${var_disk:-15}"
 var_cpu="${var_cpu:-4}"
