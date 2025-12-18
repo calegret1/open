@@ -82,7 +82,7 @@ msg_info "Setup PostgreSQL Database"
 DB_NAME="odoo"
 DB_USER="odoo_usr"
 DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
+$STD su - postgres -c "psql -c \"CREATE DATABASE $DB_NAME;\""
 $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
@@ -102,7 +102,7 @@ sed -i \
   -e "s|^;*db_user *=.*|db_user = $DB_USER|" \
   -e "s|^;*db_password *=.*|db_password = $DB_PASS|" \
   /etc/odoo/odoo.conf
-$STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
+$STD su - odoo -c "odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init"
 rm -f /opt/odoo.deb
 rm -f /opt/python3-lxml-html-clean.deb
 echo "${RELEASE}" >/opt/${APP}_version.txt
