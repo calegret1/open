@@ -23,9 +23,10 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+  
 
   if [[ ! -f /etc/odoo/odoo.conf ]]; then
-    msg_error "No ${APP} Installation Found!"
+    msg_error "No Odoo Installation Found!"
     exit
   fi
   if ! [[ $(dpkg -s python3-lxml-html-clean 2>/dev/null) ]]; then
@@ -36,30 +37,26 @@ function update_script() {
   fi
 
   RELEASE="18.0"
-  LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
-    grep -oP "odoo_${RELEASE}\.\d+_all\.deb" |
-    sed -E "s/odoo_(${RELEASE}\.[0-9]+)_all\.deb/\1/" |
-    sort -V |
-    tail -n1)
+  LATEST_VERSION="18.0.20251220"
 
-  if [[ "${LATEST_VERSION}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping ${APP} service"
+  if [[ "18.0.20251220" != "$(cat /opt/Odoo_version.txt)" ]] || [[ ! -f /opt/Odoo_version.txt ]]; then
+    msg_info "Stopping Odoo service"
     systemctl stop odoo
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to ${LATEST_VERSION}"
-    curl -fsSL https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${RELEASE}.latest_all.deb -o /opt/odoo.deb
+    msg_info "Updating Odoo to 18.0.20251220"
+    curl -fsSL https://nightly.odoo.com/18.0/nightly/deb/odoo_18.0.20251220_all.deb -o /opt/odoo.deb
     $STD apt install -y /opt/odoo.deb
     rm -f /opt/odoo.deb
-    echo "$LATEST_VERSION" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${LATEST_VERSION}"
+    echo "$LATEST_VERSION" >/opt/Odoo_version.txt
+    msg_ok "Updated Odoo to 18.0.20251220"
 
     msg_info "Starting Service"
     systemctl start odoo
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   else
-    msg_ok "No update required. ${APP} is already at ${LATEST_VERSION}"
+    msg_ok "No update required. Odoo is already at 18.0.20251220"
   fi
   exit
 }
@@ -69,6 +66,6 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
-echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${CREATING}${GN}Odoo setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Accede usando la siguiente URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8069${CL}"
