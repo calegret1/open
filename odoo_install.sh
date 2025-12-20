@@ -55,7 +55,7 @@ sed -i \
 $STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
 rm -f /opt/odoo.deb
 rm -f /opt/python3-lxml-html-clean.deb
-echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
+# echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
 msg_ok "Configured Odoo"
 
 msg_info "Restarting Odoo"
